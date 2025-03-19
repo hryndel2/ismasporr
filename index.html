@@ -1,1 +1,332 @@
 
+<html>
+ <head>
+  <title>
+   Шагомер
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+        }
+  </style>
+ </head>
+ <body class="bg-gray-100 flex flex-col items-center justify-between min-h-screen">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm mt-10" id="home">
+   <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+     Шагомер
+    </h1>
+    <i class="fas fa-walking text-3xl text-blue-500">
+    </i>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Сегодняшние шаги
+    </p>
+    <p class="text-5xl font-bold text-gray-800" id="steps-today">
+     0
+    </p>
+   </div>
+   <div class="flex justify-between items-center mb-6">
+    <div class="text-center">
+     <p class="text-gray-600 text-lg">
+      Цель
+     </p>
+     <p class="text-2xl font-bold text-gray-800" id="goal">
+      10,000
+     </p>
+    </div>
+    <div class="text-center">
+     <p class="text-gray-600 text-lg">
+      Прогресс
+     </p>
+     <p class="text-2xl font-bold text-gray-800" id="progress">
+      0%
+     </p>
+    </div>
+   </div>
+   <div class="flex justify-between items-center mb-6">
+    <div class="text-center">
+     <p class="text-gray-600 text-lg">
+      Пульс
+     </p>
+     <p class="text-2xl font-bold text-gray-800" id="pulse">
+      0 BPM
+     </p>
+    </div>
+    <div class="text-center">
+     <p class="text-gray-600 text-lg">
+      Давление
+     </p>
+     <p class="text-2xl font-bold text-gray-800" id="pressure">
+      0/0
+     </p>
+    </div>
+   </div>
+   <div class="flex justify-between items-center mb-6">
+    <button class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600 transition duration-300" onclick="updateSteps()">
+     <i class="fas fa-sync-alt">
+     </i>
+     Обновить
+    </button>
+    <button class="bg-red-500 text-white px-6 py-3 rounded-lg shadow hover:bg-red-600 transition duration-300" onclick="resetData()">
+     <i class="fas fa-power-off">
+     </i>
+     Сбросить
+    </button>
+   </div>
+   <div class="flex justify-center items-center">
+    <button class="bg-green-500 text-white px-6 py-3 rounded-lg shadow hover:bg-green-600 transition duration-300" id="toggle-button" onclick="toggleStepCounting()">
+     <i class="fas fa-play">
+     </i>
+     Начать
+    </button>
+   </div>
+  </div>
+  <div class="hidden bg-white shadow-lg rounded-lg p-8 w-full max-w-sm mt-10" id="statistics">
+   <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+     Статистика
+    </h1>
+    <i class="fas fa-chart-line text-3xl text-blue-500">
+    </i>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Шаги за неделю
+    </p>
+    <p class="text-5xl font-bold text-gray-800" id="weekly-steps">
+     0
+    </p>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Средний пульс
+    </p>
+    <p class="text-5xl font-bold text-gray-800" id="average-pulse">
+     0 BPM
+    </p>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Среднее давление
+    </p>
+    <p class="text-5xl font-bold text-gray-800" id="average-pressure">
+     0/0
+    </p>
+   </div>
+  </div>
+  <div class="hidden bg-white shadow-lg rounded-lg p-8 w-full max-w-sm mt-10" id="profile">
+   <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+     Профиль
+    </h1>
+    <i class="fas fa-user text-3xl text-blue-500">
+    </i>
+   </div>
+   <div class="text-center mb-8">
+    <img alt="Профиль пользователя" class="rounded-full mx-auto mb-4" src="https://placehold.co/100x100"/>
+    <p class="text-gray-600 text-lg">
+     Имя
+    </p>
+    <p class="text-3xl font-bold text-gray-800">
+     Иван Иванов
+    </p>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Возраст
+    </p>
+    <p class="text-3xl font-bold text-gray-800">
+     30
+    </p>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Вес
+    </p>
+    <p class="text-3xl font-bold text-gray-800">
+     75 кг
+    </p>
+   </div>
+  </div>
+  <div class="hidden bg-white shadow-lg rounded-lg p-8 w-full max-w-sm mt-10" id="settings">
+   <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+     Настройки
+    </h1>
+    <i class="fas fa-cog text-3xl text-blue-500">
+    </i>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Цель шагов
+    </p>
+    <input class="border rounded-lg p-3 w-full text-lg" id="goal-input" onchange="updateGoal()" type="number" value="10000"/>
+   </div>
+   <div class="text-center mb-8">
+    <p class="text-gray-600 text-lg">
+     Уведомления
+    </p>
+    <label class="flex items-center justify-center">
+     <input class="form-checkbox h-6 w-6 text-blue-600" id="notifications" type="checkbox"/>
+     <span class="ml-3 text-gray-800 text-lg">
+      Включить уведомления
+     </span>
+    </label>
+   </div>
+  </div>
+  <div class="bg-white shadow-lg w-full fixed bottom-0">
+   <div class="flex justify-around py-4">
+    <button class="flex flex-col items-center text-gray-600 hover:text-blue-500 transition duration-300" onclick="showSection('home')">
+     <i class="fas fa-home text-3xl">
+     </i>
+     <span class="text-lg">
+      Главная
+     </span>
+    </button>
+    <button class="flex flex-col items-center text-gray-600 hover:text-blue-500 transition duration-300" onclick="showSection('statistics')">
+     <i class="fas fa-chart-line text-3xl">
+     </i>
+     <span class="text-lg">
+      Статистика
+     </span>
+    </button>
+    <button class="flex flex-col items-center text-gray-600 hover:text-blue-500 transition duration-300" onclick="showSection('profile')">
+     <i class="fas fa-user text-3xl">
+     </i>
+     <span class="text-lg">
+      Профиль
+     </span>
+    </button>
+    <button class="flex flex-col items-center text-gray-600 hover:text-blue-500 transition duration-300" onclick="showSection('settings')">
+     <i class="fas fa-cog text-3xl">
+     </i>
+     <span class="text-lg">
+      Настройки
+     </span>
+    </button>
+   </div>
+  </div>
+  <script>
+   let stepCounting = false;
+        let stepInterval;
+
+        function showSection(sectionId) {
+            const sections = ['home', 'statistics', 'profile', 'settings'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function updateSteps() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    // Simulate step count based on position (this is just a placeholder)
+                    const steps = Math.floor(Math.random() * 10000);
+                    localStorage.setItem('stepsToday', steps);
+                    document.getElementById('steps-today').innerText = steps.toLocaleString();
+                    updateProgress();
+                    updateHealthMetrics(steps);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function resetData() {
+            localStorage.removeItem('stepsToday');
+            localStorage.removeItem('pulse');
+            localStorage.removeItem('pressure');
+            document.getElementById('steps-today').innerText = '0';
+            document.getElementById('pulse').innerText = '0 BPM';
+            document.getElementById('pressure').innerText = '0/0';
+            updateProgress();
+        }
+
+        function updateGoal() {
+            const goal = document.getElementById('goal-input').value;
+            localStorage.setItem('goal', goal);
+            document.getElementById('goal').innerText = goal;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
+            const goal = parseInt(localStorage.getItem('goal')) || 10000;
+            const progress = Math.min((stepsToday / goal) * 100, 100).toFixed(2);
+            document.getElementById('progress').innerText = `${progress}%`;
+        }
+
+        function loadInitialData() {
+            const stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
+            const goal = parseInt(localStorage.getItem('goal')) || 10000;
+            const pulse = parseInt(localStorage.getItem('pulse')) || 0;
+            const pressure = localStorage.getItem('pressure') || '0/0';
+
+            document.getElementById('steps-today').innerText = stepsToday.toLocaleString();
+            document.getElementById('goal').innerText = goal;
+            document.getElementById('pulse').innerText = `${pulse} BPM`;
+            document.getElementById('pressure').innerText = pressure;
+
+            updateProgress();
+        }
+
+        function toggleStepCounting() {
+            stepCounting = !stepCounting;
+            const toggleButton = document.getElementById('toggle-button');
+            if (stepCounting) {
+                toggleButton.classList.remove('bg-green-500');
+                toggleButton.classList.add('bg-red-500');
+                toggleButton.innerHTML = '<i class="fas fa-pause"></i> Остановить';
+                startStepCounting();
+            } else {
+                toggleButton.classList.remove('bg-red-500');
+                toggleButton.classList.add('bg-green-500');
+                toggleButton.innerHTML = '<i class="fas fa-play"></i> Начать';
+                stopStepCounting();
+            }
+        }
+
+        function startStepCounting() {
+            stepInterval = setInterval(() => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        // Simulate step count based on position (this is just a placeholder)
+                        let stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
+                        stepsToday += Math.floor(Math.random() * 10); // Simulate steps increment
+                        localStorage.setItem('stepsToday', stepsToday);
+                        document.getElementById('steps-today').innerText = stepsToday.toLocaleString();
+                        updateProgress();
+                        updateHealthMetrics(stepsToday);
+                    });
+                }
+            }, 1000); // Update steps every second
+        }
+
+        function stopStepCounting() {
+            clearInterval(stepInterval);
+        }
+
+        function updateHealthMetrics(steps) {
+            // Simulate pulse and pressure based on steps
+            const pulse = 60 + Math.floor(steps / 100);
+            const systolicPressure = 120 + Math.floor(steps / 200);
+            const diastolicPressure = 80 + Math.floor(steps / 300);
+
+            localStorage.setItem('pulse', pulse);
+            localStorage.setItem('pressure', `${systolicPressure}/${diastolicPressure}`);
+
+            document.getElementById('pulse').innerText = `${pulse} BPM`;
+            document.getElementById('pressure').innerText = `${systolicPressure}/${diastolicPressure}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadInitialData);
+  </script>
+ </body>
+</html>
